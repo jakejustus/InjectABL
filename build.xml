@@ -1,0 +1,43 @@
+<project name="InjectABL">
+  <taskdef resource="PCT.properties" />
+  <typedef resource="types.properties" />
+  <taskdef resource="extras.properties" />
+
+  <target name="init">
+    <mkdir dir="target/libs" />
+    <mkdir dir="target/build" />
+    <mkdir dir="target/preprocess" />
+    <mkdir dir="target/xmldoc" />
+    <mkdir dir="target/htmldoc" />
+    <copy toDir="target/libs">
+      <plfileset src="${DLC}/src/OpenEdge.Core.pl" />
+    </copy>
+  </target>
+
+  <target name="build" depends="init">
+    <PCTCompile destDir="target/build" preprocessDir="target/preprocess" dlcHome="${DLC}">
+      <fileset dir="src" includes="**/*.cls" />
+      <propath>
+        <pathelement path="src"/>
+        <pathelement path="target/libs" />
+      </propath>
+    </PCTCompile>
+  </target>
+
+  <target name="doc" depends="build">
+    <ClassDocumentation destDir="target/xmldoc" dlcHome="${DLC}">
+      <fileset dir="target/preprocess" includes="**/*.cls" />
+      <propath>
+        <pathelement path="target/preprocess" />
+      </propath>
+    </ClassDocumentation>
+    <HTMLDocumentation sourceDir="target/xmldoc" destDir="target/htmldoc" dlcHome="${DLC}" />
+  </target>
+
+  <target name="dist" depends="build">
+    <PCTLibrary destFile="target/InjectABL.pl">
+      <fileset dir="target/build" includes="**/*.r" />
+    </PCTLibrary>
+  </target>
+
+</project>

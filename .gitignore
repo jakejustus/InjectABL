@@ -10,7 +10,7 @@ dlc-src
 *.r
 temp/
 .propath
-
+target
 
 #################
 ## Eclipse
